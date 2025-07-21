@@ -1,0 +1,11 @@
+id,first_name,last_name,email,gender,country,longitude,latitude
+299,John,Doe,john.doe@email.com,male,USA,-74.0060,40.7128
+2836,Jane,Smith,jane.smith@email.com,female,China,116.4074,39.9042
+4001,Alice,Johnson,alice.j@email.com,female,Russia,37.6176,55.7558
+6002,Bob,Wilson,bob.w@email.com,male,China,121.4737,31.2304
+8003,Carol,Brown,carol.b@email.com,female,Russia,30.3351,59.9311
+2004,David,Taylor,david.t@email.com,male,USA,-118.2437,34.0522
+4005,Eva,Anderson,eva.a@email.com,female,China,114.0579,22.5431
+6006,Frank,Thomas,frank.t@email.com,male,Russia,49.6606,58.5966
+8007,Grace,White,grace.w@email.com,female,China,108.9480,34.2597
+2008,Henry,Martin,henry.m@email.com,male,Russia,44.0020,56.3269
