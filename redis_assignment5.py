@@ -8,31 +8,28 @@ from redis.commands.search.indexDefinition import IndexDefinition
 from redis.commands.search.query import Query
 
 class Redis_Client():
-    redis = None
-    
-    def __init__(self):
-        self.redis = self.redis
 
-    """
-    Connect to redis with "host", "port", "db", "username" and "password".
-    """
+    def __init__(self):
+        self.redis = None
+
     def connect(self):
+
         try:
             self.redis = redis.Redis(
-                host='redis-12345.c123.us-east-1-2.ec2.cloud.redislabs.com',  # Replace with your Redis host
-                port=12345,  # Replace with your Redis port
+                host='redis-10990.c276.us-east-1-2.ec2.redns.redis-cloud.com',
+                port=10990,
                 db=0,
-                username='default',  # Replace with your username
-                password='your_password_here',  # Replace with your password
+                username='default',
+                password='wkbNlmETkNdUGYn0inng2pMF94b80oDU',
                 decode_responses=True
             )
-            # Test the connection
             self.redis.ping()
-            print("Connect to Redis.")
+            print("Connected to Redis.")
             return self.redis
         except Exception as e:
             print(f"Connection failed: {e}")
             print_stack()
+
 
     """
     Load the users dataset into Redis DB.
@@ -42,44 +39,43 @@ class Redis_Client():
         try:
             pipe = self.redis.pipeline()
             with open(file, 'r') as f:
-                content = f.read()
-                # Split by user entries - each starts with "user:
-                user_entries = content.split(' "user:')[1:]  # Skip first empty element
-                
-                for entry in user_entries:
-                    # Parse each user entry
-                    parts = entry.strip().split('" "')
-                    if len(parts) >= 11:  # Ensure we have enough parts
-                        user_id = parts[0]  # First part is the ID
+                for line in f:
+                    # Remove newline and split on quote space quote
+                    parts = line.strip().split('" "')
+                    if len(parts) >= 21:
+                    # Clean up leading/trailing quotes
+                        parts = [p.strip('"') for p in parts]
+
+                        user_id = parts[0].split(":")[1]
                         user_key = f"user:{user_id}"
-                        
-                        # Create hash mapping from the parsed data
+
                         user_data = {
-                            'first_name': parts[2] if len(parts) > 2 else '',
-                            'last_name': parts[4] if len(parts) > 4 else '',
-                            'email': parts[6] if len(parts) > 6 else '',
-                            'gender': parts[8] if len(parts) > 8 else '',
-                            'ip_address': parts[10] if len(parts) > 10 else '',
-                            'country': parts[12] if len(parts) > 12 else '',
-                            'country_code': parts[14] if len(parts) > 14 else '',
-                            'city': parts[16] if len(parts) > 16 else '',
-                            'longitude': parts[18] if len(parts) > 18 else '',
-                            'latitude': parts[20] if len(parts) > 20 else '',
-                            'last_login': parts[22].rstrip('"') if len(parts) > 22 else ''
+                            'first_name': parts[2],
+                            'last_name': parts[4],
+                            'email': parts[6],
+                            'gender': parts[8],
+                            'ip_address': parts[10],
+                            'country': parts[12],
+                            'country_code': parts[14],
+                            'city': parts[16],
+                            'longitude': parts[18],
+                            'latitude': parts[20],
+                            'last_login': parts[22] if len(parts) > 22 else ''
                         }
-                        
-                        # Store in Redis hash
+
                         pipe.hset(user_key, mapping=user_data)
                         result += 1
-                        
+
             pipe.execute()
             print("Load data for user")
             print(result)
             return result
+
         except Exception as e:
             print(f"Error loading users: {e}")
             print_stack()
             return 0
+
 
     """
     Load the scores dataset into Redis DB.
@@ -236,13 +232,15 @@ if __name__ == "__main__":
     rs = Redis_Client()
     rs.connect()
     
-    # Load data - uncomment these lines after setting up Redis connection
-    # rs.load_users("users.txt")
-    # rs.load_scores()
+
+
+    #Load data - uncomment these lines after setting up Redis connection
+    #rs.load_users("users.txt")
+    #rs.load_scores()
     
-    # Execute all queries
-    rs.query1(299)
-    rs.query2(2836)
-    rs.query3()
-    rs.query4()
+  # Execute all queries
+    #rs.query1(299)
+    #rs.query2(2836)
+    #rs.query3()
+    #rs.query4()
     rs.query5()
